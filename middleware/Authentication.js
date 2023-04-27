@@ -7,7 +7,7 @@ const authentication=(req,res,next)=>{
     if(token){
         const decoded=jwt.verify(token,process.env.key)
         if(decoded){
-            //console.log(decoded)
+            console.log(decoded)
             const userID=decoded.userID
             req.body.userID=userID
             next()

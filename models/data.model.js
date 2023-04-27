@@ -5,7 +5,8 @@ const dataSchema = mongoose.Schema({
     description: { type: String },
     image: { 
       data: Buffer, 
-      contentType:String
+      contentType:String,
+      filename:String
     }
 })
 const DataModel = mongoose.model("data", dataSchema)

@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 })
 app.use("/users",userRoutes)
 
-app.use(authentication)
+//app.use(authentication)
 
 app.use("/data",dataRoutes)
 
