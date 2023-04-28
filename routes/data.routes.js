@@ -43,6 +43,8 @@ dataRoutes.get('/:id/img', async (req, res) => {
             res.status(500).send('Error in showing img');
         });
 });
+
+
 dataRoutes.delete("/:id", async (req, res) => {
     const id = req.params.id
     const note = await DataModel.findOne({ "_id": id })
@@ -66,29 +68,33 @@ dataRoutes.delete("/:id", async (req, res) => {
 
 })
 
-dataRoutes.patch("/update/:id", async (req, res) => {
-    const payload = req.body
-    const id = req.params.id
-    const note = await DataModel.findOne({ "_id": id })
-    const userID_in_note = note.userID
-    const userId_makeing_req = req.body.userID
-
+dataRoutes.patch('/update/:id', upload.single('image'), async (req, res) => {
     try {
-        if (userId_makeing_req !== userID_in_note) {
-            res.send({ "msg": "You are not authorized" })
-
-        }
-        else {
-            await NoteModel.findByIdAndUpdate({ "_id": id }, payload)
-            res.send("note updated")
-        }
+      const image = await DataModel.findById(req.params.id);
+      if (!image) {
+        return res.status(404).send('Image not found');
+      }
+  
+      if (req.file) {
+        const {  buffer } = req.file;
+        image.image.data = buffer;
+      }
+  
+      if (req.body.title) {
+        image.title = req.body.title;
+      }
+  
+      if (req.body.description) {
+        image.description = req.body.description;
+      }
+  
+      await image.save();
+      res.send('Image updated successfully');
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal server error');
     }
-    catch (err) {
-        console.log({ "err": "error creating note" })
-        console.log(err)
-    }
-
-})
+  });
 
 module.exports = {
     dataRoutes
