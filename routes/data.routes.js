@@ -28,6 +28,12 @@ dataRoutes.get("/", async (req, res) => {
     res.send(data)
 })
 
+dataRoutes.get("/:id", async (req, res) => {
+    const id = req.params.id
+    const data = await DataModel.findOne({ "_id": id })
+    res.send(data)
+})
+
 dataRoutes.get('/:id/img', async (req, res) => {
     const id = req.params.id;
     await DataModel.findOne({ "_id": id })
