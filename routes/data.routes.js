@@ -74,34 +74,34 @@ dataRoutes.delete("/:id", async (req, res) => {
 
 })
 
-dataRoutes.patch('/update/:id', upload.single('image'), async (req, res) => {
+dataRoutes.patch('/:id', upload.single('image'), async (req, res) => {
     try {
-      const image = await DataModel.findById(req.params.id);
-      if (!image) {
+      const ima = await DataModel.findById(req.params.id);
+     
+      if (!ima) {
         return res.status(404).send('Image not found');
       }
   
-      if (req.file) {
-        const {  buffer } = req.file;
-        image.image.data = buffer;
+      if (req.file && req.file.buffer) {
+        ima.image= req.file.buffer;
       }
   
       if (req.body.title) {
-        image.title = req.body.title;
+        ima.title = req.body.title;
       }
   
       if (req.body.description) {
-        image.description = req.body.description;
+        ima.description = req.body.description;
       }
   
-      await image.save();
-      res.send('Image updated successfully');
+      const updatedImage = await ima.save();
+      res.json(updatedImage);
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal server error');
     }
   });
-
+  
 module.exports = {
     dataRoutes
 }
